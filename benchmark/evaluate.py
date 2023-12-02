@@ -15,8 +15,15 @@ class AvailableModels(StrEnum):
     SVD = "svd"
 
 
-def make_metrics_table(model: AvailableModels, rmse: float = .0, precision: float = .0,
-                       recall: float = .0, ndcg: float = .0, map_score: float = .0, k: int = 10) -> Table:
+def make_metrics_table(
+    model: AvailableModels,
+    rmse: float = 0.0,
+    precision: float = 0.0,
+    recall: float = 0.0,
+    ndcg: float = 0.0,
+    map_score: float = 0.0,
+    k: int = 10,
+) -> Table:
     table = Table(title=f"Metrics for `{model}`, k={k}")
 
     table.add_column("Metric", style="bold")
