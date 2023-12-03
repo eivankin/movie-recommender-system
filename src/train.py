@@ -28,7 +28,8 @@ def train(
         train_metrics = Evaluator(model.model, dataset).evaluate(EvalOn.TRAIN, k=k)
         test_metrics = Evaluator(model.model, dataset).evaluate(EvalOn.TEST, k=k)
         pbar.set_description(
-            f"Test: AUC - {test_metrics.auc:.4f} | F1 - {test_metrics.f1:.4f}"
+            f"Test: AUC - {test_metrics.auc:.4f} | Precision@{k} - {test_metrics.precision:.4f} "
+            f"| Recall@{k} - {test_metrics.recall:.4f}"
         )
 
         metric_reports.append(train_metrics)

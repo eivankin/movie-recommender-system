@@ -1,5 +1,6 @@
 from typing import Self
 
+import pandas as pd
 from lightfm.data import Dataset
 from scipy.sparse import coo_matrix
 
@@ -23,13 +24,15 @@ class MovieLensDataset:
         - genre
     """
 
-    def __init__(self, train_data, test_data, user_data, movie_data):
+    def __init__(self, train_data: pd.DataFrame, test_data: pd.DataFrame, user_data: pd.DataFrame,
+                 movie_data: pd.DataFrame, rating_threshold: int = 4):
         self.dataset = Dataset()
         self.fit_dataset(user_data, movie_data)
         self.train_interactions, self.train_weights = self.build_interactions(
-            train_data
+            train_data, rating_threshold
         )
-        self.test_interactions, self.test_weights = self.build_interactions(test_data)
+        self.test_interactions, self.test_weights = self.build_interactions(test_data,
+                                                                            rating_threshold)
         self.user_features = self.build_user_features(user_data)
         self.item_features = self.build_item_features(movie_data)
 
@@ -48,9 +51,17 @@ class MovieLensDataset:
             ],
         )
 
-    def build_interactions(self, data) -> tuple[coo_matrix, coo_matrix]:
+    @staticmethod
+    def transform_rating(rating: int, threshold: int):
+        """
+        Transforms rating to the type of interaction (positive or negative).
+        Returns 1 if rating >= threshold, -1 otherwise.
+        """
+        return 1 if rating >= threshold else -1
+
+    def build_interactions(self, data: pd.DataFrame, rating_threshold: int) -> tuple[coo_matrix, coo_matrix]:
         return self.dataset.build_interactions(
-            (data["user_id"][i], data["item_id"][i]) for i in range(len(data))
+            (data["user_id"][i], data["item_id"][i]) for i in range(len(data)) if data["rating"][i] >= rating_threshold
         )
 
     def build_user_features(self, data) -> coo_matrix:
@@ -68,11 +79,11 @@ class MovieLensDataset:
         )
 
     @classmethod
-    def from_split(cls, split: AvailableSplits) -> Self:
+    def from_split(cls, split: AvailableSplits, rating_threshold: int = 4) -> Self:
         """Loads dataset from given train/test split."""
         train_data, test_data = load_train_test(split)
 
         movie_data = load_movie_data()
         user_data = load_user_data()
 
-        return cls(train_data, test_data, user_data, movie_data)
+        return cls(train_data, test_data, user_data, movie_data, rating_threshold)
