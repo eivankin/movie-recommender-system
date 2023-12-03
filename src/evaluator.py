@@ -25,7 +25,16 @@ class MetricReport:
 
 
 class Evaluator:
-    # TODO: comments
+    """
+    This class wraps lightfm metrics for easier usage in the project.
+
+    Available metrics:
+    1. precision@k
+    2. recall@k
+    3. f1@k
+    4. auc
+    """
+
     def __init__(self, model: LightFM, dataset: MovieLensDataset):
         self.model = model
         self.dataset = dataset

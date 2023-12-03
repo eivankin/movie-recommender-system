@@ -12,7 +12,17 @@ from src.data.load import (
 
 
 class MovieLensDataset:
-    # TODO: comments
+    """This class wraps lightfm dataset for easier usage in the project.
+
+    Uses the following dataset features:
+    1. User:
+        - age_group (see preprocess script)
+        - gender
+        - occupation
+    2. Movie:
+        - genre
+    """
+
     def __init__(self, train_data, test_data, user_data, movie_data):
         self.dataset = Dataset()
         self.fit_dataset(user_data, movie_data)
@@ -24,6 +34,7 @@ class MovieLensDataset:
         self.item_features = self.build_item_features(movie_data)
 
     def fit_dataset(self, user_data, movie_data) -> None:
+        """Fits dataset on given structure (ids and categorical features)."""
         self.dataset.fit(
             user_data.user_id,
             movie_data.item_id,
@@ -46,9 +57,7 @@ class MovieLensDataset:
         return self.dataset.build_user_features(
             (
                 data["user_id"][i],
-                [data["age_group"][i],
-                 data["gender"][i],
-                 data["occupation"][i]],
+                [data["age_group"][i], data["gender"][i], data["occupation"][i]],
             )
             for i in range(len(data))
         )
@@ -60,6 +69,7 @@ class MovieLensDataset:
 
     @classmethod
     def from_split(cls, split: AvailableSplits) -> Self:
+        """Loads dataset from given train/test split."""
         train_data, test_data = load_train_test(split)
 
         movie_data = load_movie_data()
