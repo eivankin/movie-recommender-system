@@ -7,3 +7,16 @@
 
 See [task description](task_description.md) for more details about the assignment.
 
+## Reproducing the experiment results
+### Training
+```shell
+python -m src.train path/to/save/at 1 --epochs=30 --plot
+```
+See `python -m src.train --help` for more details about command parameters. 
+
+### Evaluation
+```shell
+python -m benchmark.evaluate path/to/saved/model 1
+```
+
+See `python -m benchmark.evaluate --help` for more details about command parameters.
