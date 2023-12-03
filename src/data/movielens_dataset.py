@@ -4,12 +4,8 @@ import pandas as pd
 from lightfm.data import Dataset
 from scipy.sparse import coo_matrix
 
-from src.data.load import (
-    load_train_test,
-    AvailableSplits,
-    load_movie_data,
-    load_user_data,
-)
+from src.data.load import (AvailableSplits, load_movie_data, load_train_test,
+                           load_user_data)
 
 
 class MovieLensDataset:
@@ -24,15 +20,22 @@ class MovieLensDataset:
         - genre
     """
 
-    def __init__(self, train_data: pd.DataFrame, test_data: pd.DataFrame, user_data: pd.DataFrame,
-                 movie_data: pd.DataFrame, rating_threshold: int = 4):
+    def __init__(
+        self,
+        train_data: pd.DataFrame,
+        test_data: pd.DataFrame,
+        user_data: pd.DataFrame,
+        movie_data: pd.DataFrame,
+        rating_threshold: int = 4,
+    ):
         self.dataset = Dataset()
         self.fit_dataset(user_data, movie_data)
         self.train_interactions, self.train_weights = self.build_interactions(
             train_data, rating_threshold
         )
-        self.test_interactions, self.test_weights = self.build_interactions(test_data,
-                                                                            rating_threshold)
+        self.test_interactions, self.test_weights = self.build_interactions(
+            test_data, rating_threshold
+        )
         self.user_features = self.build_user_features(user_data)
         self.item_features = self.build_item_features(movie_data)
 
@@ -59,9 +62,13 @@ class MovieLensDataset:
         """
         return 1 if rating >= threshold else -1
 
-    def build_interactions(self, data: pd.DataFrame, rating_threshold: int) -> tuple[coo_matrix, coo_matrix]:
+    def build_interactions(
+        self, data: pd.DataFrame, rating_threshold: int
+    ) -> tuple[coo_matrix, coo_matrix]:
         return self.dataset.build_interactions(
-            (data["user_id"][i], data["item_id"][i]) for i in range(len(data)) if data["rating"][i] >= rating_threshold
+            (data["user_id"][i], data["item_id"][i])
+            for i in range(len(data))
+            if data["rating"][i] >= rating_threshold
         )
 
     def build_user_features(self, data) -> coo_matrix:

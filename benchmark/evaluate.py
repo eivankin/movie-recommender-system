@@ -4,12 +4,12 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from src.data.movielens_dataset import MovieLensDataset
-from src.seeding import set_seed
-from src.evaluator import MetricReport, Evaluator, EvalOn
-from src.data.load import AvailableSplits
-from src.lightfm_model import LightFMWrapper
 from src.config import SEED
+from src.data.load import AvailableSplits
+from src.data.movielens_dataset import MovieLensDataset
+from src.evaluator import EvalOn, Evaluator, MetricReport
+from src.lightfm_model import LightFMWrapper
+from src.seeding import set_seed
 
 console = Console()
 
@@ -25,7 +25,7 @@ def make_metrics_table(metric_report: MetricReport) -> Table:
     table.add_row(f"Precision@{metric_report.top_k}", f"{metric_report.precision:.4f}")
     table.add_row(f"Recall@{metric_report.top_k}", f"{metric_report.recall:.4f}")
     table.add_row(f"F1@{metric_report.top_k}", f"{metric_report.f1:.4f}")
-    table.add_row(f"AUC", f"{metric_report.auc:.4f}")
+    table.add_row("AUC", f"{metric_report.auc:.4f}")
 
     return table
 

@@ -1,7 +1,6 @@
-from pathlib import Path
-
 import pickle
-from typing import Self, Iterable
+from pathlib import Path
+from typing import Iterable, Self
 
 import numpy as np
 from lightfm import LightFM

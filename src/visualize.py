@@ -7,8 +7,8 @@ def plot_metric(
     metric_name: str, train_metric_values: list[float], test_metric_values: list[float]
 ) -> None:
     epochs_range = range(1, len(train_metric_values) + 1)
-    plt.plot(epochs_range, train_metric_values, label=f"Train")
-    plt.plot(epochs_range, test_metric_values, label=f"Test")
+    plt.plot(epochs_range, train_metric_values, label="Train")
+    plt.plot(epochs_range, test_metric_values, label="Test")
     plt.title(f"{metric_name} Over Epochs")
     plt.xlabel("Epochs")
     plt.ylabel(metric_name)

@@ -2,8 +2,8 @@ from enum import StrEnum
 
 import pandas as pd
 
-from src.config import DATASET_PATH, DATA_PATH
-from src.data.preprocess import make_age_groups, get_genres
+from src.config import DATA_PATH, DATASET_PATH
+from src.data.preprocess import get_genres, make_age_groups
 
 
 class AvailableSplits(StrEnum):

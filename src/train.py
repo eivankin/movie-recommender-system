@@ -4,12 +4,12 @@ import typer
 from lightfm import LightFM
 from tqdm.auto import trange
 
-from src.data.load import AvailableSplits
-from src.lightfm_model import LightFMWrapper
-from src.data.movielens_dataset import MovieLensDataset
 from src.config import SEED
+from src.data.load import AvailableSplits
+from src.data.movielens_dataset import MovieLensDataset
+from src.evaluator import EvalOn, Evaluator, MetricReport
+from src.lightfm_model import LightFMWrapper
 from src.seeding import set_seed
-from src.evaluator import MetricReport, Evaluator, EvalOn
 from src.visualize import plot_metrics
 
 

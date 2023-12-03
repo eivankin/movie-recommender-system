@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum, auto
+from typing import Callable
 
 from lightfm import LightFM
-from lightfm.evaluation import precision_at_k, recall_at_k, auc_score
-
-from typing import Callable
+from lightfm.evaluation import auc_score, precision_at_k, recall_at_k
 
 from src.data.movielens_dataset import MovieLensDataset
 
