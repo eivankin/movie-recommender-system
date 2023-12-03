@@ -1,48 +1,49 @@
-from enum import StrEnum
+from pathlib import Path
 
 import typer
 from rich.console import Console
 from rich.table import Table
 
-from src.utils import set_seed
+from src.data.movielens_dataset import MovieLensDataset
+from src.seeding import set_seed
+from src.evaluator import MetricReport, Evaluator, EvalOn
+from src.data.load import AvailableSplits
+from src.lightfm_model import LightFMWrapper
+from src.config import SEED
 
 console = Console()
 
 
-class AvailableModels(StrEnum):
-    RANDOM_BASELINE = "rng"
-    MOST_POPULAR_BASELINE = "most_popular"
-    SVD = "svd"
+def make_metrics_table(metric_report: MetricReport) -> Table:
+    set_name = "test" if metric_report.is_on_test else "train"
 
-
-def make_metrics_table(
-    model: AvailableModels,
-    rmse: float = 0.0,
-    precision: float = 0.0,
-    recall: float = 0.0,
-    ndcg: float = 0.0,
-    map_score: float = 0.0,
-    k: int = 10,
-) -> Table:
-    table = Table(title=f"Metrics for `{model}`")
+    table = Table(title=f"Metrics for {set_name} set")
 
     table.add_column("Metric", style="bold")
     table.add_column("Value", style="bold")
 
-    table.add_row("RMSE", f"{rmse:.4f}")
-    table.add_row(f"Precision@{k}", f"{precision:.4f}")
-    table.add_row(f"Recall@{k}", f"{recall:.4f}")
-    table.add_row(f"NDCG@{k}", f"{ndcg:.4f}")
-    table.add_row(f"MAP@{k}", f"{map_score:.4f}")
+    table.add_row(f"Precision@{metric_report.top_k}", f"{metric_report.precision:.4f}")
+    table.add_row(f"Recall@{metric_report.top_k}", f"{metric_report.recall:.4f}")
+    table.add_row(f"F1@{metric_report.top_k}", f"{metric_report.f1:.4f}")
+    table.add_row(f"AUC", f"{metric_report.auc:.4f}")
 
     return table
 
 
-def evaluate(model_name: AvailableModels, seed: int = 42) -> None:
+def evaluate(
+    model_file: Path, split: AvailableSplits, seed: int = SEED, k: int = 20
+) -> None:
     set_seed(seed)
-    metric_results_table = make_metrics_table(model_name)
+    model = LightFMWrapper.from_file(model_file)
+    dataset = MovieLensDataset.from_split(split)
 
-    console.print(metric_results_table)
+    evaluator = Evaluator(model.model, dataset)
+
+    train_metrics = make_metrics_table(evaluator.evaluate(EvalOn.TRAIN, k=k))
+    console.print(train_metrics)
+
+    test_metrics = make_metrics_table(evaluator.evaluate(EvalOn.TEST, k=k))
+    console.print(test_metrics)
 
 
 if __name__ == "__main__":
