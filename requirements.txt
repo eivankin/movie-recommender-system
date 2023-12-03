@@ -7,3 +7,7 @@ matplotlib~=3.8.1
 lightfm~=1.17
 scipy~=1.11.4
 tqdm~=4.66.1
+geopandas~=0.14.1
+shapely~=2.0.2
+uszipcode~=1.0.1
+contextily~=1.4.0
