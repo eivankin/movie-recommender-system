@@ -24,16 +24,16 @@ def make_metrics_table(
     map_score: float = 0.0,
     k: int = 10,
 ) -> Table:
-    table = Table(title=f"Metrics for `{model}`, k={k}")
+    table = Table(title=f"Metrics for `{model}`")
 
     table.add_column("Metric", style="bold")
     table.add_column("Value", style="bold")
 
     table.add_row("RMSE", f"{rmse:.4f}")
-    table.add_row("Precision@k", f"{precision:.4f}")
-    table.add_row("Recall@k", f"{recall:.4f}")
-    table.add_row("NDCG@k", f"{ndcg:.4f}")
-    table.add_row("MAP@k", f"{map_score:.4f}")
+    table.add_row(f"Precision@{k}", f"{precision:.4f}")
+    table.add_row(f"Recall@{k}", f"{recall:.4f}")
+    table.add_row(f"NDCG@{k}", f"{ndcg:.4f}")
+    table.add_row(f"MAP@{k}", f"{map_score:.4f}")
 
     return table
 
